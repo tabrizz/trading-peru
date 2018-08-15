@@ -6,7 +6,7 @@
                     <div class="card-header">Crear Hoja de Carga</div>
 
                     <div class="card-body">
-                        <form @submit.prevent="">
+                        <form @submit.prevent="storeTruckLoadProducts">
 
                             <div class="form-group row">
                                 <label for="seller_id" class="col-md-4 col-form-label text-md-right">Vendedor</label>
@@ -41,46 +41,31 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                    <div class="col-md-3 ml-auto">
-                                        <button @click="addProduct" type="button" class="btn btn-success">Agregar Producto</button>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="row">
-                                <table class="table table-hover">
+                                <table class="table table-hover table_morecondensed">
                                     <thead class="thead-dark">
                                     <tr>
                                         <th>Producto</th>
-                                        <th>Cant. Importe</th>
-                                        <th>Importe</th>
+                                        <th>Precio Unitario</th>
                                         <th>Cantidad</th>
+                                        <th>Sub Total</th>
                                         <th>Opciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="(product_item, index) in truck_load.products">
-                                        <td class="col-sm-6">
-                                            <multiselect
-                                                    v-model="product_item.product"
-                                                    :options="products"
-                                                    placeholder="Seleccione el Producto"
-                                                    :custom-label="productLabel"
-                                                    :selectedLabel="selected"
-                                                    :deselectLabel="remove"
-                                                    :selectLabel="select">
-                                            </multiselect>
+                                    <tr v-for="(product, index) in products">
+
+                                        <td>
+                                            {{ product.name }} {{ product.description }}
                                         </td>
                                         <td>
-                                            <input v-model="product_item.a_price" id="a_price" class="form-control" type="text" name="a_price" required>
+                                            <input v-model="product.price" id="price" class="form-control" type="text" name="price">
                                         </td>
                                         <td>
-                                            <input v-model="product_item.price" id="price" class="form-control" type="text" name="price" required>
+                                            <input v-model="product.amount" id="amount" class="form-control" type="text" name="amount">
                                         </td>
                                         <td>
-                                            <input v-model="product_item.amount" id="amount" class="form-control" type="text" name="amount" required>
+                                            {{ product.price * product.amount | roundSubPrice }}
                                         </td>
                                         <td>
                                             <button @click.prevent="deleteProduct(index)" type="button" class="btn btn-danger btn-sm">Quitar</button>
@@ -89,7 +74,17 @@
                                     </tbody>
                                 </table>
                             </div>
-
+                            <div class="form-group row">
+                                <div class="col-md-2 ml-auto">
+                                    <label>Total</label>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ truck_load.total_price | roundSubPrice }}
+                                </div>
+                                <div class="col-md-4">
+                                    <button @click.prevent="calculateTotal" class="btn btn-success">Calcular</button>
+                                </div>
+                            </div>
                             <div class="col-md-6 ml-auto">
                                 <button type="submit" class="btn btn-primary">
                                     Registrar
@@ -126,8 +121,9 @@
                     products: [],
                     description: '',
                     load_date: '',
+                    total_price: 0.0
                 },
-                flag: false
+                flag: false,
             }
         },
         methods: {
@@ -147,25 +143,51 @@
                 axios.get('/api/products')
                     .then((res) => {
                         this.products = res.data;
-                        console.log(this.products);
                     })
                     .catch((err) => {
                         console.log('error:', err);
                     });
             },
+            storeTruckLoadProducts() {
+                this.truck_load.products = this.products;
+                axios.post('/api/truck-loads', this.truck_load)
+                    .then(res => {
+                        if (res.status === 200) {
+                            console.log(res.data);
+                            swal('Muy bien!', `Carga registrada`, 'success');
+                            setTimeout(() => {
+                                window.location.href = '/truck-loads';
+                            }, 2000);
+
+                        } else {
+                            swal('Hubo un error!', 'No se pudo registrar Carga', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            },
             sellerLabel(seller) {
                 return `${seller.dni} - ${seller.first_name} ${seller.last_name}`;
             },
-            productLabel(product) {
-                return `${product.name} - ${product.description}`;
-            },
-            addProduct() {
-                this.truck_load.products.push({
-                    product: '', a_price: '', price: '',amount: ''});
-            },
             deleteProduct(index) {
-                this.truck_load.products.splice(index,1)
+                this.products.splice(index,1)
             },
+            calculateTotal() {
+                this.truck_load.total_price = 0;
+                this.products.map(product => {
+                    if(product.amount !== undefined) {
+                        this.truck_load.total_price = this.truck_load.total_price + (product.price * product.amount);
+                    }
+                });
+            }
+        },
+        filters: {
+            roundSubPrice(value) {
+                if(value) {
+                    return Number.parseFloat(value).toPrecision(3);
+                }
+            }
         },
         mounted() {
             console.log('Component mounted.');
@@ -176,3 +198,12 @@
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style scoped>
+    .table_morecondensed>thead>tr>th,
+    .table_morecondensed>tbody>tr>th,
+    .table_morecondensed>tfoot>tr>th,
+    .table_morecondensed>thead>tr>td,
+    .table_morecondensed>tbody>tr>td,
+    .table_morecondensed>tfoot>tr>td{ padding: 2px; }
+</style>

@@ -9,6 +9,11 @@
                         {{\Session::get('success')}}
                     </div>
                 @endif
+                    @if(\Session::has('updated'))
+                        <div class="alert alert-primary">
+                            {{\Session::get('updated')}}
+                        </div>
+                    @endif
                 <div class="card">
                     <div class="card-header">Listado de Vendedores</div>
                     <div class="card-body">
@@ -36,7 +41,9 @@
                                 <td>{{ $seller->last_name }}</td>
                                 <td>{{ $seller->phone_number }}</td>
                                 <td>{{ $seller->address }}</td>
-                                <td></td>
+                                <td>
+                                    <a href="{{ route('sellers.edit', $seller->id) }}" class="btn btn-info btn-sm" type="button">Editar</a>
+                                </td>
                             </tr>
                             @endforeach
                             </tbody>

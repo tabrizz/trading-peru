@@ -44,6 +44,7 @@ class ProductController extends Controller
             'name'=>'required|string',
             'description'=>'required|string',
             'stock'=>'nullable|numeric',
+            'price'=>'required'
         ]);
         Product::create($request->all());
         return redirect()->route('products.index')->with('success','Producto creado satisfactoriamente');
@@ -69,6 +70,9 @@ class ProductController extends Controller
     public function edit($id)
     {
         //
+        $product = Product::find($id);
+
+        return view('products.edit')->with('product', $product);
     }
 
     /**
@@ -81,6 +85,16 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request, [
+            'name'=>'required|string',
+            'description'=>'required|string',
+            'stock'=>'nullable|numeric',
+            'price'=>'required'
+        ]);
+        $product = Product::find($id);
+        $product->update($request->all());
+
+        return redirect()->route('products.index')->with('updated','Producto actualizado satisfactoriamente');
     }
 
     /**

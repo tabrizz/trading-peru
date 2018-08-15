@@ -11,5 +11,6 @@ class TruckLoad extends Model
         'seller_id',
         'description',
         'load_date',
+        'total_price'
     ];
 }

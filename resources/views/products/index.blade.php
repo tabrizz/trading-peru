@@ -9,6 +9,11 @@
                         {{\Session::get('success')}}
                     </div>
                 @endif
+                    @if(\Session::has('updated'))
+                        <div class="alert alert-primary">
+                            {{\Session::get('updated')}}
+                        </div>
+                    @endif
                 <div class="card">
                     <div class="card-header">Listado de Productos</div>
                     <div class="card-body">
@@ -23,6 +28,7 @@
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Descripción</th>
                                 <th scope="col">Stock</th>
+                                <th scope="col">Precio Unitario</th>
                                 <th scope="col">Opciones</th>
                             </tr>
                             </thead>
@@ -32,7 +38,10 @@
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->description }}</td>
                                     <td>{{ $product->stock }}</td>
-                                    <td></td>
+                                    <td>{{ $product->price }}</td>
+                                    <td>
+                                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-info btn-sm" type="button">Editar</a>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

@@ -16,6 +16,8 @@ window.Vue = require('vue');
  */
 
 Vue.component('create-truck-load-component', require('./components/CreateTruckLoadComponent.vue'));
+Vue.component('index-truck-load-component', require('./components/IndexTruckLoadComponent.vue'));
+Vue.component('show-truck-load-component', require('./components/ShowTruckLoadComponent.vue'));
 
 const app = new Vue({
     el: '#app'

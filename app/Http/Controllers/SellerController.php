@@ -73,6 +73,9 @@ class SellerController extends Controller
     public function edit($id)
     {
         //
+        $seller = Seller::find($id);
+
+        return view('sellers.edit')->with('seller', $seller);
     }
 
     /**
@@ -85,6 +88,17 @@ class SellerController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request, [
+            'first_name'=>'required|string',
+            'last_name'=>'required|string',
+            'dni'=>'nullable|numeric',
+            'phone_number'=>'nullable|string',
+            'address'=>'nullable|string',
+        ]);
+        $seller = Seller::find($id);
+        $seller->update($request->all());
+
+        return redirect()->route('sellers.index')->with('updated','Vendedor actualizado satisfactoriamente');
     }
 
     /**

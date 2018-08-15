@@ -19,7 +19,8 @@ Auth::routes();
 
 Route::get('/api/sellers', 'SellerController@getSellers');
 Route::get('/api/products', 'ProductController@getProducts');
-
+Route::post('/api/truck-loads', 'TruckLoadController@storeTruckLoadProducts');
+Route::get('/api/truck-loads-by-date/{from_date}/{to_date}', 'TruckLoadController@getTruckLoadByDate');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('sellers', 'SellerController');

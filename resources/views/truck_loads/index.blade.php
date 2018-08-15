@@ -1,7 +1,5 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: tabrizz
- * Date: 05-Aug-18
- * Time: 10:27 AM
- */
+@extends('layouts.app')
+
+@section('content')
+    <index-truck-load-component></index-truck-load-component>
+@endsection
