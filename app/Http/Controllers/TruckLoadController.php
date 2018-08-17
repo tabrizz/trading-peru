@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
 use App\TruckLoad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -98,28 +99,83 @@ class TruckLoadController extends Controller
 
     public function storeTruckLoadProducts(Request $request) {
         //
-        $truck_load = new TruckLoad;
-        $truck_load->seller_id = $request->seller['id'];
-        $truck_load->description = $request->description;
-        $truck_load->load_date = $request->load_date;
-        $truck_load->total_price = $request->total_price;
-        $truck_load->save();
-        $truck_load_id = $truck_load->id;
+        if ($this->isAvailable($request->products)) {
+            $truck_load = new TruckLoad;
+            $truck_load->seller_id = $request->seller['id'];
+            $truck_load->description = $request->description;
+            $truck_load->load_date = $request->load_date;
+            $truck_load->total_price = $request->total_price;
+            $truck_load->save();
+            $truck_load_id = $truck_load->id;
 
-        foreach ($request->products as $product) {
-            if (array_key_exists('amount', $product)) {
-                DB::table('product_truck_load')->insert(
-                    [
-                        'product_id' => $product['id'],
-                        'truck_load_id' => $truck_load_id,
-                        'price' => $product['price'],
-                        'amount' => $product['amount'],
-                        'created_at' =>  \Carbon\Carbon::now(),
-                        'updated_at' => \Carbon\Carbon::now(),
-                    ]
-                );
+            foreach ($request->products as $product) {
+                if (array_key_exists('amount', $product)) {
+                    $seller_bag = DB::table('seller_product_bag')
+                        ->whereRaw('seller_product_bag.seller_id = ? and seller_product_bag.product_id = ?', [$request->seller['id'], $product['id']])->get();
+                    if ($seller_bag->isEmpty()) {
+                        DB::table('seller_product_bag')->insert(
+                            [
+                                'seller_id' => $request->seller['id'],
+                                'product_id' => $product['id'],
+                                'price' => $product['price'],
+                                'amount' => $product['amount'],
+                                'created_at' =>  \Carbon\Carbon::now(),
+                                'updated_at' => \Carbon\Carbon::now(),
+                            ]
+                        );
+                    } else {
+                        DB::table('seller_product_bag')
+                            ->whereRaw('seller_product_bag.seller_id = ? and seller_product_bag.product_id = ?', [$request->seller['id'], $product['id']])
+                            ->update([
+                                'price' => ($product['price']),
+                                'amount' => ($seller_bag[0]->amount + $product['amount'])
+                            ]);
+                    }
+                    $product_available = Product::find($product['id']);
+
+                    DB::table('products')
+                        ->whereRaw('products.id = ?', [$product['id']])
+                        ->update([
+                            'stock' => ($product_available->stock - $product['amount'])
+                        ]);
+
+                    DB::table('product_truck_load')->insert(
+                        [
+                            'product_id' => $product['id'],
+                            'truck_load_id' => $truck_load_id,
+                            'price' => $product['price'],
+                            'amount' => $product['amount'],
+                            'created_at' =>  \Carbon\Carbon::now(),
+                            'updated_at' => \Carbon\Carbon::now(),
+                        ]
+                    );
+                }
             }
         }
+
+    }
+
+    public function isAvailable($products) {
+        //
+        foreach ($products as $product) {
+            if (array_key_exists('amount', $product)) {
+                $product_available = DB::table('products')
+                    ->whereRaw('products.id = ?', [$product['id']])->get();
+
+                if ($product_available->isEmpty()) {
+                    return false;
+                } else {
+                    $amount = (int)$product['amount'];
+                    $stock = (int)$product_available[0]->stock;
+
+                    if ($amount > $stock) {
+                        dd(true);
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public function getTruckLoadByDate($from_date, $to_date) {

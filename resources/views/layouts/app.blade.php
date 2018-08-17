@@ -42,6 +42,8 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('products.create') }}">Registrar Productos</a>
                                 <a class="dropdown-item" href="{{ route('products.index') }}">Listar Productos</a>
+                                <a class="dropdown-item" href="{{ route('purchase-orders.create') }}">Registrar Orden de Compra</a>
+                                <a class="dropdown-item" href="{{ route('purchase-orders.index') }}">Listar Ordenes de Compra</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">

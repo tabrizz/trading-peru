@@ -21,8 +21,11 @@ Route::get('/api/sellers', 'SellerController@getSellers');
 Route::get('/api/products', 'ProductController@getProducts');
 Route::post('/api/truck-loads', 'TruckLoadController@storeTruckLoadProducts');
 Route::get('/api/truck-loads-by-date/{from_date}/{to_date}', 'TruckLoadController@getTruckLoadByDate');
+Route::post('/api/purchase-orders', 'PurchaseOrderController@storePurchaseOrder');
+Route::get('/api/purchase-orders-by-date/{from_date}/{to_date}', 'PurchaseOrderController@getPurchaseOrderByDate');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('sellers', 'SellerController');
 Route::resource('products', 'ProductController');
 Route::resource('truck-loads', 'TruckLoadController');
+Route::resource('purchase-orders', 'PurchaseOrderController');

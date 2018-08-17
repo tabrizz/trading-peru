@@ -6,38 +6,21 @@
                     <div class="card-header">Crear Hoja de Carga</div>
 
                     <div class="card-body">
-                        <form @submit.prevent="storeTruckLoadProducts">
-
-                            <div class="form-group row">
-                                <label for="seller_id" class="col-md-4 col-form-label text-md-right">Vendedor</label>
-
-                                <div class="col-md-6">
-                                    <multiselect
-                                            id="seller_id"
-                                            v-model="truck_load.seller"
-                                            :options="sellers"
-                                            placeholder="Seleccione el Vendedor"
-                                            :custom-label="sellerLabel"
-                                            :selectedLabel="selected"
-                                            :deselectLabel="remove"
-                                            :selectLabel="select">
-                                    </multiselect>
-                                </div>
-                            </div>
+                        <form @submit.prevent="storePurchaseOrder">
 
                             <div class="form-group row">
                                 <label for="description" class="col-md-4 col-form-label text-md-right">Descripción</label>
 
                                 <div class="col-md-6">
-                                    <input v-model="truck_load.description" id="description" type="text" class="form-control" name="description">
+                                    <input v-model="puchase_order.description" id="description" type="text" class="form-control" name="description">
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="load_date" class="col-md-4 col-form-label text-md-right">Fecha de Carga</label>
+                                <label for="purchase_date" class="col-md-4 col-form-label text-md-right">Fecha de Orden</label>
 
                                 <div class="col-md-6">
-                                    <input v-model="truck_load.load_date" id="load_date" type="date" class="form-control" name="amount" required>
+                                    <input v-model="puchase_order.purchase_date" id="purchase_date" type="date" class="form-control" name="purchase_date" required>
                                 </div>
                             </div>
 
@@ -79,7 +62,7 @@
                                     <label>Total</label>
                                 </div>
                                 <div class="col-md-2">
-                                    {{ truck_load.total_price | roundSubPrice }}
+                                    {{ puchase_order.total_price | roundSubPrice }}
                                 </div>
                                 <div class="col-md-4">
                                     <button @click.prevent="calculateTotal" class="btn btn-success">Calcular</button>
@@ -103,12 +86,8 @@
 </template>
 
 <script>
-    import Multiselect from 'vue-multiselect';
 
     export default {
-        components: {
-            Multiselect
-        },
         data() {
             return {
                 sellers: [],
@@ -116,11 +95,10 @@
                 selected: '',
                 select: '',
                 remove: '',
-                truck_load: {
-                    seller: '',
+                puchase_order: {
                     products: [],
                     description: '',
-                    load_date: '',
+                    purchase_date: '',
                     total_price: 0.0
                 },
                 flag: false,
@@ -129,15 +107,6 @@
         methods: {
             checkForm() {
                 this.errors = []
-            },
-            getSellers() {
-                axios.get('/api/sellers')
-                    .then((res) => {
-                        this.sellers = res.data;
-                    })
-                    .catch((err) => {
-                        console.log('error:', err);
-                    });
             },
             getProducts() {
                 axios.get('/api/products')
@@ -148,15 +117,15 @@
                         console.log('error:', err);
                     });
             },
-            storeTruckLoadProducts() {
-                this.truck_load.products = this.products;
-                axios.post('/api/truck-loads', this.truck_load)
+            storePurchaseOrder() {
+                this.puchase_order.products = this.products;
+                axios.post('/api/purchase-orders', this.puchase_order)
                     .then(res => {
                         if (res.status === 200) {
                             console.log(res.data);
                             // swal('Muy bien!', `Carga registrada`, 'success');
                             // setTimeout(() => {
-                            //     window.location.href = '/truck-loads';
+                            //     window.location.href = '/purchase-orders';
                             // }, 2000);
 
                         } else {
@@ -174,10 +143,10 @@
                 this.products.splice(index,1)
             },
             calculateTotal() {
-                this.truck_load.total_price = 0;
+                this.puchase_order.total_price = 0;
                 this.products.map(product => {
                     if(product.amount !== undefined) {
-                        this.truck_load.total_price = this.truck_load.total_price + (product.price * product.amount);
+                        this.puchase_order.total_price = this.puchase_order.total_price + (product.price * product.amount);
                     }
                 });
             }
@@ -191,13 +160,10 @@
         },
         mounted() {
             console.log('Component mounted.');
-            this.getSellers();
             this.getProducts();
         },
     }
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
     .table_morecondensed>thead>tr>th,

@@ -22,6 +22,7 @@
     "dependencies": {
         "moment": "^2.22.2",
         "sweetalert2": "^7.26.10",
+        "vue-disable-autocomplete": "0.0.4",
         "vue-multiselect": "^2.1.0"
     }
 }
