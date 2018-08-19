@@ -69,7 +69,7 @@
                                     <label>Total</label>
                                 </div>
                                 <div class="col-md-2">
-                                    {{ total_price | roundSubPrice }}
+                                    {{ total_price }}
                                 </div>
                             </div>
                         </form>
@@ -101,7 +101,7 @@
         filters: {
             roundSubPrice(value) {
                 if(value) {
-                    return Number.parseFloat(value).toPrecision(3);
+                    return Number.parseFloat(value).toPrecision(6);
                 }
             }
         },

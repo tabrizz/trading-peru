@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 @if(\Session::has('success'))
@@ -30,6 +30,7 @@
                                 <th scope="col">Apellidos</th>
                                 <th scope="col">Celular</th>
                                 <th scope="col">Dirección</th>
+                                <th scope="col">Dinero</th>
                                 <th scope="col">Opciones</th>
                             </tr>
                             </thead>
@@ -41,8 +42,11 @@
                                 <td>{{ $seller->last_name }}</td>
                                 <td>{{ $seller->phone_number }}</td>
                                 <td>{{ $seller->address }}</td>
+                                <td>{{ $seller->money }}</td>
                                 <td>
                                     <a href="{{ route('sellers.edit', $seller->id) }}" class="btn btn-info btn-sm" type="button">Editar</a>
+                                    <a href="{{ route('sellers.inventory', $seller->id) }}" class="btn btn-warning btn-sm" type="button">Inventario</a>
+                                    <a href="{{ route('clearings.index', $seller->id) }}" class="btn btn-light btn-sm" type="button">Liquidación</a>
                                 </td>
                             </tr>
                             @endforeach

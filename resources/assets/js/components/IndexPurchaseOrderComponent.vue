@@ -46,7 +46,7 @@
                                             {{ product.purchase_date | formatDate }}
                                         </td>
                                         <td>
-                                            {{ product.total_price | roundSubPrice }}
+                                            {{ product.total_price }}
                                         </td>
                                         <td>
                                             <a :href="`/purchase-orders/${product.purchase_order_id}`" type="button" class="btn btn-info btn-sm">Ver</a>
@@ -91,7 +91,7 @@
         filters: {
             roundSubPrice(value) {
                 if(value) {
-                    return Number.parseFloat(value).toPrecision(3);
+                    return Number.parseFloat(value).toPrecision(7);
                 }
             },
             formatDate(value) {

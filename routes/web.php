@@ -23,9 +23,16 @@ Route::post('/api/truck-loads', 'TruckLoadController@storeTruckLoadProducts');
 Route::get('/api/truck-loads-by-date/{from_date}/{to_date}', 'TruckLoadController@getTruckLoadByDate');
 Route::post('/api/purchase-orders', 'PurchaseOrderController@storePurchaseOrder');
 Route::get('/api/purchase-orders-by-date/{from_date}/{to_date}', 'PurchaseOrderController@getPurchaseOrderByDate');
+Route::post('api/store-clearings', 'ClearingController@storeClearing');
+
+Route::get('seller-product-bag/{id}', 'SellerController@getSellerBag')->name('sellers.inventory');
+Route::get('seller-clearing/{id}', 'SellerController@storeSellerClearing')->name('sellers.clearing');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('sellers', 'SellerController');
 Route::resource('products', 'ProductController');
 Route::resource('truck-loads', 'TruckLoadController');
 Route::resource('purchase-orders', 'PurchaseOrderController');
+Route::get('clearings/{id}', 'ClearingController@index')->name('clearings.index');
+Route::get('clearings/{id}/show', 'ClearingController@show')->name('clearings.show');
+Route::get('clearings/{id}/create', 'ClearingController@create')->name('clearings.create');

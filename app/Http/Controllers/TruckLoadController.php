@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Seller;
+use App\SellerProductBag;
 use App\TruckLoad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -151,6 +153,13 @@ class TruckLoadController extends Controller
                     );
                 }
             }
+            $seller = Seller::find($request->seller['id']);
+            $seller->money = $seller->money + $request->total_price;
+            $seller->save();
+            return response()->json(['store' => 'success']);
+
+        } else {
+            return response()->json(['store' => 'failed']);
         }
 
     }

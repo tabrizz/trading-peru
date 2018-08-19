@@ -20,6 +20,7 @@ class CreateSellersTable extends Migration
             $table->string('dni')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('address')->nullable();
+            $table->decimal('money', 10, 3)->default(0);
             $table->boolean('status')->default(1);
             $table->timestamps();
         });

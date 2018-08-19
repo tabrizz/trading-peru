@@ -50,7 +50,7 @@
                                             {{ product.load_date | formatDate }}
                                         </td>
                                         <td>
-                                            {{ product.total_price | roundSubPrice }}
+                                            {{ product.total_price }}
                                         </td>
                                         <td>
                                             <a :href="`/truck-loads/${product.truck_load_id}`" type="button" class="btn btn-info btn-sm">Ver</a>

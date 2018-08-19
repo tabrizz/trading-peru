@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Seller;
+use App\SellerProductBag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SellerController extends Controller
 {
@@ -41,7 +43,6 @@ class SellerController extends Controller
     {
         //
 
-        //dd($request->all());
         $this->validate($request, [
             'first_name'=>'required|string',
             'last_name'=>'required|string',
@@ -49,7 +50,14 @@ class SellerController extends Controller
             'phone_number'=>'nullable|string',
             'address'=>'nullable|string',
         ]);
-        Seller::create($request->all());
+        Seller::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'dni' => $request->dni,
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'money' => ($request->money == null ? 0 : $request->money)
+        ]);
         return redirect()->route('sellers.index')->with('success','Vendedor creado satisfactoriamente');
     }
 
@@ -116,5 +124,20 @@ class SellerController extends Controller
         $sellers = Seller::all();
 
         return $sellers;
+    }
+
+    public function getSellerBag($id) {
+        $seller_product_bag = DB::table('seller_product_bag')
+            ->selectRaw('seller_product_bag.id as seller_product_bag_id, sellers.first_name, sellers.last_name,
+                        sellers.dni, products.name, products.description, seller_product_bag.amount, seller_product_bag.price')
+            ->join('products', 'seller_product_bag.product_id', '=', 'products.id')
+            ->join('sellers', 'seller_product_bag.seller_id', '=', 'sellers.id')
+            ->whereRaw('seller_product_bag.seller_id = ?', [$id])->get();
+
+        return view('sellers.inventory')->with('seller_product_bag', $seller_product_bag);
+    }
+
+    public function storeSellerClearing() {
+
     }
 }

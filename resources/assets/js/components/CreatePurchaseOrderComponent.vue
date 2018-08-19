@@ -62,7 +62,7 @@
                                     <label>Total</label>
                                 </div>
                                 <div class="col-md-2">
-                                    {{ puchase_order.total_price | roundSubPrice }}
+                                    {{ puchase_order.total_price }}
                                 </div>
                                 <div class="col-md-4">
                                     <button @click.prevent="calculateTotal" class="btn btn-success">Calcular</button>
@@ -123,10 +123,10 @@
                     .then(res => {
                         if (res.status === 200) {
                             console.log(res.data);
-                            // swal('Muy bien!', `Carga registrada`, 'success');
-                            // setTimeout(() => {
-                            //     window.location.href = '/purchase-orders';
-                            // }, 2000);
+                            swal('Muy bien!', `Carga registrada`, 'success');
+                            setTimeout(() => {
+                                window.location.href = '/purchase-orders';
+                            }, 2000);
 
                         } else {
                             swal('Hubo un error!', 'No se pudo registrar Carga', 'error');
@@ -143,18 +143,23 @@
                 this.products.splice(index,1)
             },
             calculateTotal() {
-                this.puchase_order.total_price = 0;
+                this.puchase_order.total_price = 0.0;
                 this.products.map(product => {
                     if(product.amount !== undefined) {
                         this.puchase_order.total_price = this.puchase_order.total_price + (product.price * product.amount);
                     }
                 });
-            }
+                let number = this.puchase_order.total_price.toString().split('.')[0].length;
+                this.puchase_order.total_price = this.roundPrice(this.puchase_order.total_price, number);
+            },
+            roundPrice(value, number) {
+                return Number.parseFloat(value).toPrecision(number + 3);
+            },
         },
         filters: {
             roundSubPrice(value) {
                 if(value) {
-                    return Number.parseFloat(value).toPrecision(3);
+                    return Number.parseFloat(value).toPrecision(5);
                 }
             }
         },

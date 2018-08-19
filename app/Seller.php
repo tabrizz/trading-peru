@@ -14,6 +14,7 @@ class Seller extends Model
         'dni',
         'phone_number',
         'address',
-        'status'
+        'status',
+        'money'
     ];
 }

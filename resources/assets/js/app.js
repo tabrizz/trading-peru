@@ -21,6 +21,7 @@ Vue.component('show-truck-load-component', require('./components/ShowTruckLoadCo
 Vue.component('create-purchase-order-component', require('./components/CreatePurchaseOrderComponent.vue'));
 Vue.component('index-purchase-order-component', require('./components/IndexPurchaseOrderComponent.vue'));
 Vue.component('show-purchase-order-component', require('./components/ShowPurchaseOrderComponent.vue'));
+Vue.component('create-clearing-component', require('./components/CreateClearingComponent.vue'));
 
 const app = new Vue({
     el: '#app'

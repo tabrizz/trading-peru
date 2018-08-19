@@ -79,7 +79,7 @@
                                     <label>Total</label>
                                 </div>
                                 <div class="col-md-2">
-                                    {{ truck_load.total_price | roundSubPrice }}
+                                    {{ truck_load.total_price }}
                                 </div>
                                 <div class="col-md-4">
                                     <button @click.prevent="calculateTotal" class="btn btn-success">Calcular</button>
@@ -152,12 +152,12 @@
                 this.truck_load.products = this.products;
                 axios.post('/api/truck-loads', this.truck_load)
                     .then(res => {
-                        if (res.status === 200) {
+                        if (res.data.store === 'success') {
                             console.log(res.data);
-                            // swal('Muy bien!', `Carga registrada`, 'success');
-                            // setTimeout(() => {
-                            //     window.location.href = '/truck-loads';
-                            // }, 2000);
+                            swal('Muy bien!', `Carga registrada`, 'success');
+                            setTimeout(() => {
+                                window.location.href = '/truck-loads';
+                            }, 2000);
 
                         } else {
                             swal('Hubo un error!', 'No se pudo registrar Carga', 'error');
@@ -174,18 +174,23 @@
                 this.products.splice(index,1)
             },
             calculateTotal() {
-                this.truck_load.total_price = 0;
+                this.truck_load.total_price = 0.0;
                 this.products.map(product => {
                     if(product.amount !== undefined) {
                         this.truck_load.total_price = this.truck_load.total_price + (product.price * product.amount);
                     }
                 });
-            }
+                let number = this.truck_load.total_price.toString().split('.')[0].length;
+                this.truck_load.total_price = this.roundPrice(this.truck_load.total_price, number);
+            },
+            roundPrice(value, number) {
+                return Number.parseFloat(value).toPrecision(number + 3);
+            },
         },
         filters: {
             roundSubPrice(value) {
                 if(value) {
-                    return Number.parseFloat(value).toPrecision(3);
+                    return Number.parseFloat(value).toPrecision(5);
                 }
             }
         },
