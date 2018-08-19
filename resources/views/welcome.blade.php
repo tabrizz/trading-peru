@@ -78,7 +78,7 @@
             @endif
 
             <div class="content">
-                <img src="{{ url('img/pepsi.png')}}" width="100" height="100" class="d-inline-block align-top" alt="">
+                <img src="{{ url('img/logo.png')}}" width="120" height="100" class="d-inline-block align-top" alt="">
                 <div class="title m-b-md">
                     Trading Perú
                 </div>

@@ -24,7 +24,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
-                <img src="{{ url('img/pepsi.png')}}" width="30" height="30" class="d-inline-block align-top" alt="">
+                <img src="{{ url('img/logo.png')}}" width="35" height="30" class="d-inline-block align-top" alt="">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Trading Perú
                 </a>
