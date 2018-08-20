@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::paginate(15);
+        $products = Product::orderBy('id', 'desc')->paginate(15);
 
         return view('products.index')->with('products', $products);
     }
@@ -95,7 +95,7 @@ class ProductController extends Controller
         $product = Product::find($id);
         $product->update($request->all());
 
-        //return redirect()->route('products.index')->with('updated','Producto actualizado satisfactoriamente');
+        return redirect()->route('products.index')->with('updated','Producto actualizado satisfactoriamente');
     }
 
     /**
