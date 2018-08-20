@@ -95,7 +95,7 @@ class ProductController extends Controller
         $product = Product::find($id);
         $product->update($request->all());
 
-        return redirect()->route('products.index')->with('updated','Producto actualizado satisfactoriamente');
+        //return redirect()->route('products.index')->with('updated','Producto actualizado satisfactoriamente');
     }
 
     /**
