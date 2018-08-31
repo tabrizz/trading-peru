@@ -67908,6 +67908,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         storeTruckLoadProducts: function storeTruckLoadProducts() {
+            this.calculateTotal();
             this.truck_load.products = this.products;
             axios.post('/api/truck-loads', this.truck_load).then(function (res) {
                 if (res.data.store === 'success') {
@@ -69658,6 +69659,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         storePurchaseOrder: function storePurchaseOrder() {
+            this.calculateTotal();
             this.puchase_order.products = this.products;
             axios.post('/api/purchase-orders', this.puchase_order).then(function (res) {
                 if (res.status === 200) {
@@ -71577,11 +71579,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.calculateTotal();
             axios.post('/api/store-clearings', this.clearing).then(function (res) {
                 if (res.status === 200) {
-                    // swal('Muy bien!', `Liquidación registrada`, 'success');
-                    // setTimeout(() => {
-                    //     window.location.href = '/sellers';
-                    // }, 2000);
-
+                    swal('Muy bien!', 'Liquidaci\xF3n registrada', 'success');
+                    setTimeout(function () {
+                        window.location.href = '/sellers';
+                    }, 2000);
                 } else {
                     swal('Hubo un error!', 'No se pudo registrar Liquidación', 'error');
                 }

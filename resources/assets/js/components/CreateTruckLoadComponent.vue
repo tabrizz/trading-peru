@@ -149,6 +149,7 @@
                     });
             },
             storeTruckLoadProducts() {
+                this.calculateTotal();
                 this.truck_load.products = this.products;
                 axios.post('/api/truck-loads', this.truck_load)
                     .then(res => {

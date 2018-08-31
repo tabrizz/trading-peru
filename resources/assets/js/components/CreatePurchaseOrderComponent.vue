@@ -118,6 +118,7 @@
                     });
             },
             storePurchaseOrder() {
+                this.calculateTotal();
                 this.puchase_order.products = this.products;
                 axios.post('/api/purchase-orders', this.puchase_order)
                     .then(res => {

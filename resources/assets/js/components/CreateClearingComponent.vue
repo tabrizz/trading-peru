@@ -248,11 +248,10 @@
                 axios.post('/api/store-clearings', this.clearing)
                     .then(res => {
                         if (res.status === 200) {
-                            // swal('Muy bien!', `Liquidación registrada`, 'success');
-                            // setTimeout(() => {
-                            //     window.location.href = '/sellers';
-                            // }, 2000);
-
+                            swal('Muy bien!', `Liquidación registrada`, 'success');
+                            setTimeout(() => {
+                                window.location.href = '/sellers';
+                            }, 2000);
                         } else {
                             swal('Hubo un error!', 'No se pudo registrar Liquidación', 'error');
                         }
