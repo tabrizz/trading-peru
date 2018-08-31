@@ -30,7 +30,7 @@
                                 <th scope="col">Apellidos</th>
                                 <th scope="col">Celular</th>
                                 <th scope="col">Dirección</th>
-                                <th scope="col">Dinero</th>
+                                <th scope="col">Dinero Entregado en Prod</th>
                                 <th scope="col">Opciones</th>
                             </tr>
                             </thead>
@@ -47,6 +47,7 @@
                                     <a href="{{ route('sellers.edit', $seller->id) }}" class="btn btn-info btn-sm" type="button">Editar</a>
                                     <a href="{{ route('sellers.inventory', $seller->id) }}" class="btn btn-warning btn-sm" type="button">Inventario</a>
                                     <a href="{{ route('clearings.index', $seller->id) }}" class="btn btn-light btn-sm" type="button">Liquidación</a>
+                                    <a href="{{ route('books.index', $seller->id) }}" class="btn btn-dark btn-sm" type="button">Bajas</a>
                                 </td>
                             </tr>
                             @endforeach

@@ -110,7 +110,7 @@ class ProductController extends Controller
     }
 
     public function getProducts() {
-        $products = Product::all();
+        $products = Product::all()->sortBy('id');
 
         return $products;
     }

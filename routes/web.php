@@ -24,6 +24,7 @@ Route::get('/api/truck-loads-by-date/{from_date}/{to_date}', 'TruckLoadControlle
 Route::post('/api/purchase-orders', 'PurchaseOrderController@storePurchaseOrder');
 Route::get('/api/purchase-orders-by-date/{from_date}/{to_date}', 'PurchaseOrderController@getPurchaseOrderByDate');
 Route::post('api/store-clearings', 'ClearingController@storeClearing');
+Route::put('api/books/{id}', 'BookController@update');
 
 Route::get('seller-product-bag/{id}', 'SellerController@getSellerBag')->name('sellers.inventory');
 Route::get('seller-clearing/{id}', 'SellerController@storeSellerClearing')->name('sellers.clearing');
@@ -34,5 +35,8 @@ Route::resource('products', 'ProductController');
 Route::resource('truck-loads', 'TruckLoadController');
 Route::resource('purchase-orders', 'PurchaseOrderController');
 Route::get('clearings/{id}', 'ClearingController@index')->name('clearings.index');
+Route::put('clearings/{id}', 'ClearingController@update')->name('clearings.update');
 Route::get('clearings/{id}/show', 'ClearingController@show')->name('clearings.show');
 Route::get('clearings/{id}/create', 'ClearingController@create')->name('clearings.create');
+Route::get('books/{id}', 'BookController@index')->name('books.index');
+Route::get('books/{id}/show', 'BookController@show')->name('books.show');

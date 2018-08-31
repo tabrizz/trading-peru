@@ -18,6 +18,8 @@ class CreateTruckLoadsTable extends Migration
             $table->integer('seller_id');
             $table->string('description')->nullable();
             $table->dateTime('load_date');
+            $table->boolean('status')->default(0);
+            $table->integer('book_id');
             $table->decimal('total_price', 10, 3);
             $table->timestamps();
         });

@@ -30684,7 +30684,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(140);
-module.exports = __webpack_require__(204);
+module.exports = __webpack_require__(207);
 
 
 /***/ }),
@@ -30717,7 +30717,8 @@ Vue.component('show-truck-load-component', __webpack_require__(181));
 Vue.component('create-purchase-order-component', __webpack_require__(186));
 Vue.component('index-purchase-order-component', __webpack_require__(191));
 Vue.component('show-purchase-order-component', __webpack_require__(194));
-Vue.component('create-clearing-component', __webpack_require__(199));
+Vue.component('index-clearing-component', __webpack_require__(199));
+Vue.component('create-clearing-component', __webpack_require__(202));
 
 var app = new Vue({
   el: '#app'
@@ -70824,15 +70825,425 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(200)
+/* template */
+var __vue_template__ = __webpack_require__(201)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\IndexClearingComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0da57c8d", Component.options)
+  } else {
+    hotAPI.reload("data-v-0da57c8d", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 200 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_moment__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['seller', 'clearings', 'truck_loads', 'products_balance', 'money_balance', 'book_id'],
+    data: function data() {
+        return {
+            seller_item: {},
+            clearings_items: [],
+            truck_loads_items: [],
+            products_balance_item: '',
+            money_balance_item: '',
+            book_id_item: ''
+        };
+    },
+
+    methods: {
+        checkForm: function checkForm() {
+            this.errors = [];
+        },
+        updateBook: function updateBook() {
+            axios.put('/api/books/' + this.book_id_item, {
+                products_balance: this.products_balance_item,
+                money_balance: this.money_balance_item,
+                seller: this.seller_item
+            }).then(function (res) {}).catch(function (err) {
+                console.log('error:', err);
+            });
+        }
+    },
+    filters: {
+        roundSubPrice: function roundSubPrice(value) {
+            if (value) {
+                return Number.parseFloat(value).toPrecision(7);
+            }
+        },
+        formatDate: function formatDate(value) {
+            if (value) {
+                return __WEBPACK_IMPORTED_MODULE_0_moment___default()(String(value)).format('DD-MM-YYYY');
+            }
+        }
+    },
+    mounted: function mounted() {
+        console.log('Component mounted.');
+        this.seller_item = JSON.parse(this.seller);
+        this.clearings_items = JSON.parse(this.clearings);
+        this.truck_loads_items = JSON.parse(this.truck_loads);
+        this.products_balance_item = JSON.parse(this.products_balance);
+        this.money_balance_item = JSON.parse(this.money_balance);
+        this.book_id_item = JSON.parse(this.book_id);
+    }
+});
+
+/***/ }),
+/* 201 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container-fluid" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v(
+              "Listado de Liquidaciones - " +
+                _vm._s(_vm.seller_item.first_name) +
+                " " +
+                _vm._s(_vm.seller_item.last_name)
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "form-group row" }, [
+              _c("div", { staticClass: "col-md-2 ml-auto" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger btn-sm btn-block",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.updateBook($event)
+                      }
+                    }
+                  },
+                  [_vm._v("Dar de Baja")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-2" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-success btn-sm btn-block",
+                    attrs: {
+                      href: "/clearings/" + _vm.seller_item.id + "/create",
+                      type: "button"
+                    }
+                  },
+                  [_vm._v("Crear")]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("h5", [_vm._v("Cargas")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("table", { staticClass: "table table-hover" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.truck_loads_items, function(truck_load) {
+                      return _c("tr", [
+                        _c("td", [_vm._v(_vm._s(truck_load.id))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(truck_load.description))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(truck_load.load_date))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(truck_load.total_price))])
+                      ])
+                    })
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c("h5", [_vm._v("Liquidaciones")]),
+            _vm._v(" "),
+            _c("table", { staticClass: "table table-hover" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.clearings_items, function(clearing) {
+                  return _c("tr", [
+                    _c("td", [
+                      _vm._v(_vm._s(clearing.previous_products_balance))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(_vm._s(clearing.previous_credits_balance))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(clearing.income))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(clearing.left_in_products))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(clearing.credit))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(clearing.payment))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(clearing.discount))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(clearing.expense))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-info btn-sm",
+                          attrs: {
+                            href: "/clearings/" + clearing.id + "/show",
+                            type: "button"
+                          }
+                        },
+                        [_vm._v("Mostrar")]
+                      )
+                    ])
+                  ])
+                })
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-2" }, [
+                _c("label", { attrs: { for: "products_balance" } }, [
+                  _vm._v("Saldo en Productos")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "form-control",
+                  attrs: { id: "products_balance", type: "text", disabled: "" },
+                  domProps: { value: _vm.products_balance_item }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-2" }, [
+                _c("label", { attrs: { for: "money_balance" } }, [
+                  _vm._v("Saldo en Dinero")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "form-control",
+                  attrs: { id: "money_balance", type: "text", disabled: "" },
+                  domProps: { value: _vm.money_balance_item }
+                })
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("td", { attrs: { scope: "col" } }, [_vm._v("Hoja de Carga")]),
+        _vm._v(" "),
+        _c("td", { attrs: { scope: "col" } }, [_vm._v("Descripción")]),
+        _vm._v(" "),
+        _c("td", { attrs: { scope: "col" } }, [_vm._v("Fecha de Carga")]),
+        _vm._v(" "),
+        _c("td", { attrs: { scope: "col" } }, [_vm._v("Total")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Saldo en Productos")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Saldo en Dinero")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Vendido")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [
+          _vm._v("Devuelto en Productos")
+        ]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Créditos")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Cobros")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Descuentos")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Gastos")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Opciones")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0da57c8d", module.exports)
+  }
+}
+
+/***/ }),
+/* 202 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(200)
+  __webpack_require__(203)
 }
 var normalizeComponent = __webpack_require__(2)
 /* script */
-var __vue_script__ = __webpack_require__(202)
+var __vue_script__ = __webpack_require__(205)
 /* template */
-var __vue_template__ = __webpack_require__(203)
+var __vue_template__ = __webpack_require__(206)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -70871,13 +71282,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 200 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(201);
+var content = __webpack_require__(204);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -70897,7 +71308,7 @@ if(false) {
 }
 
 /***/ }),
-/* 201 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(3)(false);
@@ -70911,11 +71322,12 @@ exports.push([module.i, "\n.table_morecondensed>thead>tr>th[data-v-5ef35345],\n.
 
 
 /***/ }),
-/* 202 */
+/* 205 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
 //
 //
 //
@@ -71136,7 +71548,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 credits: [],
                 payments: [],
                 income: 0.0,
-                balance: 0.0,
+                left_in_products: 0.0,
                 expense: 0.0,
                 discount: 0.0,
                 credit: 0.0,
@@ -71162,6 +71574,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.errors = [];
         },
         storeClearing: function storeClearing() {
+            this.calculateTotal();
             axios.post('/api/store-clearings', this.clearing).then(function (res) {
                 if (res.status === 200) {
                     // swal('Muy bien!', `Liquidación registrada`, 'success');
@@ -71180,21 +71593,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             this.clearing.income = 0.0;
-            this.clearing.balance = 0.0;
+            this.clearing.left_in_products = 0.0;
             this.clearing.products.map(function (product) {
-                if (product.sold !== undefined) {
-                    _this.clearing.income = _this.clearing.income + product.price * (product.amount - product.sold);
+                if (product.left !== undefined) {
+                    _this.clearing.income = _this.clearing.income + product.price * (product.amount - product.left);
                 } else {
                     _this.clearing.income = _this.clearing.income + product.price * product.amount;
                 }
-                if (product.sold !== undefined) {
-                    _this.clearing.balance = _this.clearing.balance + product.price * product.sold;
+                if (product.left !== undefined) {
+                    _this.clearing.left_in_products = _this.clearing.left_in_products + product.price * product.left;
                 }
             });
             var number1 = this.clearing.income.toString().split('.')[0].length;
-            var number2 = this.clearing.balance.toString().split('.')[0].length;
+            var number2 = this.clearing.left_in_products.toString().split('.')[0].length;
             this.clearing.income = this.roundPrice(this.clearing.income, number1);
-            this.clearing.balance = this.roundPrice(this.clearing.balance, number2);
+            this.clearing.left_in_products = this.roundPrice(this.clearing.left_in_products, number2);
 
             var n = void 0;
             if (this.clearing.expenses.length > 0) {
@@ -71221,6 +71634,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 n = this.clearing.payment.toString().split('.')[0].length;
                 this.clearing.payment = this.roundPrice(this.clearing.payment, n);
             }
+            console.log('income', this.clearing.income);
+            console.log('left_in_products', this.clearing.left_in_products);
+            console.log('expense', this.clearing.expense);
+            console.log('discount', this.clearing.discount);
+            console.log('credit', this.clearing.credit);
+            console.log('payment', this.clearing.payment);
         },
         addExpense: function addExpense() {
             this.clearing.expenses.push({ description: '', price: '' });
@@ -71282,7 +71701,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 203 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -71407,18 +71826,18 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: product.sold,
-                                    expression: "product.sold"
+                                    value: product.left,
+                                    expression: "product.left"
                                   }
                                 ],
                                 staticClass: "form-control",
                                 attrs: {
-                                  id: "sold",
+                                  id: "left",
                                   type: "text",
-                                  name: "sold",
+                                  name: "left",
                                   autocomplete: "off"
                                 },
-                                domProps: { value: product.sold },
+                                domProps: { value: product.left },
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
@@ -71426,7 +71845,7 @@ var render = function() {
                                     }
                                     _vm.$set(
                                       product,
-                                      "sold",
+                                      "left",
                                       $event.target.value
                                     )
                                   }
@@ -71439,7 +71858,7 @@ var render = function() {
                                 "\n                                        " +
                                   _vm._s(
                                     _vm._f("roundValue")(
-                                      product.amount - product.sold
+                                      product.amount - product.left
                                     )
                                   ) +
                                   "\n                                    "
@@ -71451,7 +71870,7 @@ var render = function() {
                                 "\n                                        " +
                                   _vm._s(
                                     _vm._f("roundSubPrice")(
-                                      product.price * product.sold
+                                      product.price * product.left
                                     )
                                   ) +
                                   "\n                                    "
@@ -71466,7 +71885,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group row" }, [
                   _c("div", { staticClass: "col-md-2 ml-auto" }, [
-                    _c("label", [_vm._v("Total restante:")]),
+                    _c("label", [_vm._v("Total Vendido:")]),
                     _vm._v(
                       "\n                                " +
                         _vm._s(_vm.clearing.income) +
@@ -71475,10 +71894,10 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-2 ml-auto" }, [
-                    _c("label", [_vm._v("Total vendido:")]),
+                    _c("label", [_vm._v("Total Restante:")]),
                     _vm._v(
                       "\n                                " +
-                        _vm._s(_vm.clearing.balance) +
+                        _vm._s(_vm.clearing.left_in_products) +
                         "\n                            "
                     )
                   ]),
@@ -71499,6 +71918,420 @@ var render = function() {
                     )
                   ])
                 ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-row" }, [
+                  _c("h5", [_vm._v("Listado de Créditos")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-2 ml-auto" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success btn-sm btn-block",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.addCredit($event)
+                          }
+                        }
+                      },
+                      [_vm._v("Agregar Crédito")]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.clearing.credits, function(credit, index) {
+                  return _c("div", { staticClass: "form-row" }, [
+                    _c("div", { staticClass: "form-group col-md-6" }, [
+                      _c("label", { attrs: { for: "credit_description" } }, [
+                        _vm._v("Descripción del Crédito")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: credit.description,
+                            expression: "credit.description"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", id: "credit_description" },
+                        domProps: { value: credit.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(credit, "description", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-4" }, [
+                      _c("label", { attrs: { for: "credit_price" } }, [
+                        _vm._v("Precio")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: credit.price,
+                            expression: "credit.price"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", id: "credit_price" },
+                        domProps: { value: credit.price },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(credit, "price", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-2" }, [
+                      _c("br"),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger btn-sm",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              _vm.removeCredit(index)
+                            }
+                          }
+                        },
+                        [_vm._v("x")]
+                      )
+                    ])
+                  ])
+                }),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-row" }, [
+                  _c("h5", [_vm._v("Listado de Cobranzas")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-2 ml-auto" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success btn-sm btn-block",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.addPayment($event)
+                          }
+                        }
+                      },
+                      [_vm._v("Agregar Cobranza")]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.clearing.payments, function(payment, index) {
+                  return _c("div", { staticClass: "form-row" }, [
+                    _c("div", { staticClass: "form-group col-md-6" }, [
+                      _c("label", { attrs: { for: "payment_description" } }, [
+                        _vm._v("Descripción de la Cobranza")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: payment.description,
+                            expression: "payment.description"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", id: "payment_description" },
+                        domProps: { value: payment.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              payment,
+                              "description",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-4" }, [
+                      _c("label", { attrs: { for: "payment_price" } }, [
+                        _vm._v("Precio")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: payment.price,
+                            expression: "payment.price"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", id: "payment_price" },
+                        domProps: { value: payment.price },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(payment, "price", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-2" }, [
+                      _c("br"),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger btn-sm",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              _vm.removeCredit(index)
+                            }
+                          }
+                        },
+                        [_vm._v("x")]
+                      )
+                    ])
+                  ])
+                }),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-row" }, [
+                  _c("h5", [_vm._v("Listado de Descuentos")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-2 ml-auto" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success btn-sm btn-block",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.addDiscount($event)
+                          }
+                        }
+                      },
+                      [_vm._v("Agregar Descuento")]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.clearing.discounts, function(discount, index) {
+                  return _c("div", { staticClass: "form-row" }, [
+                    _c("div", { staticClass: "form-group col-md-6" }, [
+                      _c("label", { attrs: { for: "discount_description" } }, [
+                        _vm._v("Descripción del Descuento")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: discount.description,
+                            expression: "discount.description"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", id: "discount_description" },
+                        domProps: { value: discount.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              discount,
+                              "description",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-4" }, [
+                      _c("label", { attrs: { for: "discount_price" } }, [
+                        _vm._v("Precio")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: discount.price,
+                            expression: "discount.price"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", id: "discount_price" },
+                        domProps: { value: discount.price },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(discount, "price", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-2" }, [
+                      _c("br"),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger btn-sm",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              _vm.removeDiscount(index)
+                            }
+                          }
+                        },
+                        [_vm._v("x")]
+                      )
+                    ])
+                  ])
+                }),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-row" }, [
+                  _c("h5", [_vm._v("Listado de Gastos")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group col-md-2 ml-auto" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success btn-sm btn-block",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.addExpense($event)
+                          }
+                        }
+                      },
+                      [_vm._v("Agregar Gasto")]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.clearing.expenses, function(expense, index) {
+                  return _c("div", { staticClass: "form-row" }, [
+                    _c("div", { staticClass: "form-group col-md-6" }, [
+                      _c("label", { attrs: { for: "expense_description" } }, [
+                        _vm._v("Descripción del Gasto")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: expense.description,
+                            expression: "expense.description"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", id: "expense_description" },
+                        domProps: { value: expense.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              expense,
+                              "description",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-4" }, [
+                      _c("label", { attrs: { for: "expense_price" } }, [
+                        _vm._v("Precio")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: expense.price,
+                            expression: "expense.price"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", id: "expense_price" },
+                        domProps: { value: expense.price },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(expense, "price", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-2" }, [
+                      _c("br"),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger btn-sm",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              _vm.removeExpense(index)
+                            }
+                          }
+                        },
+                        [_vm._v("x")]
+                      )
+                    ])
+                  ])
+                }),
+                _vm._v(" "),
+                _c("hr"),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-row" }, [
                   _c("div", { staticClass: "form-group col-md-2" }, [
@@ -71778,416 +72611,6 @@ var render = function() {
                 _vm._v(" "),
                 _c("hr"),
                 _vm._v(" "),
-                _c("div", { staticClass: "form-row" }, [
-                  _c("h5", [_vm._v("Listado de Gastos")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group col-md-2 ml-auto" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-success btn-sm btn-block",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.addExpense($event)
-                          }
-                        }
-                      },
-                      [_vm._v("Agregar Gasto")]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.clearing.expenses, function(expense, index) {
-                  return _c("div", { staticClass: "form-row" }, [
-                    _c("div", { staticClass: "form-group col-md-6" }, [
-                      _c("label", { attrs: { for: "expense_description" } }, [
-                        _vm._v("Descripción del Gasto")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: expense.description,
-                            expression: "expense.description"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "expense_description" },
-                        domProps: { value: expense.description },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              expense,
-                              "description",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group col-md-4" }, [
-                      _c("label", { attrs: { for: "expense_price" } }, [
-                        _vm._v("Precio")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: expense.price,
-                            expression: "expense.price"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "expense_price" },
-                        domProps: { value: expense.price },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(expense, "price", $event.target.value)
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group col-md-2" }, [
-                      _c("br"),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-danger btn-sm",
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              _vm.removeExpense(index)
-                            }
-                          }
-                        },
-                        [_vm._v("x")]
-                      )
-                    ])
-                  ])
-                }),
-                _vm._v(" "),
-                _c("hr"),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-row" }, [
-                  _c("h5", [_vm._v("Listado de Descuentos")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group col-md-2 ml-auto" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-success btn-sm btn-block",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.addDiscount($event)
-                          }
-                        }
-                      },
-                      [_vm._v("Agregar Descuento")]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.clearing.discounts, function(discount, index) {
-                  return _c("div", { staticClass: "form-row" }, [
-                    _c("div", { staticClass: "form-group col-md-6" }, [
-                      _c("label", { attrs: { for: "discount_description" } }, [
-                        _vm._v("Descripción del Descuento")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: discount.description,
-                            expression: "discount.description"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "discount_description" },
-                        domProps: { value: discount.description },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              discount,
-                              "description",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group col-md-4" }, [
-                      _c("label", { attrs: { for: "discount_price" } }, [
-                        _vm._v("Precio")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: discount.price,
-                            expression: "discount.price"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "discount_price" },
-                        domProps: { value: discount.price },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(discount, "price", $event.target.value)
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group col-md-2" }, [
-                      _c("br"),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-danger btn-sm",
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              _vm.removeDiscount(index)
-                            }
-                          }
-                        },
-                        [_vm._v("x")]
-                      )
-                    ])
-                  ])
-                }),
-                _vm._v(" "),
-                _c("hr"),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-row" }, [
-                  _c("h5", [_vm._v("Listado de Créditos")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group col-md-2 ml-auto" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-success btn-sm btn-block",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.addCredit($event)
-                          }
-                        }
-                      },
-                      [_vm._v("Agregar Crédito")]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.clearing.credits, function(credit, index) {
-                  return _c("div", { staticClass: "form-row" }, [
-                    _c("div", { staticClass: "form-group col-md-6" }, [
-                      _c("label", { attrs: { for: "credit_description" } }, [
-                        _vm._v("Descripción del Crédito")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: credit.description,
-                            expression: "credit.description"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "credit_description" },
-                        domProps: { value: credit.description },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(credit, "description", $event.target.value)
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group col-md-4" }, [
-                      _c("label", { attrs: { for: "credit_price" } }, [
-                        _vm._v("Precio")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: credit.price,
-                            expression: "credit.price"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "credit_price" },
-                        domProps: { value: credit.price },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(credit, "price", $event.target.value)
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group col-md-2" }, [
-                      _c("br"),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-danger btn-sm",
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              _vm.removeCredit(index)
-                            }
-                          }
-                        },
-                        [_vm._v("x")]
-                      )
-                    ])
-                  ])
-                }),
-                _vm._v(" "),
-                _c("hr"),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-row" }, [
-                  _c("h5", [_vm._v("Listado de Cobranzas")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group col-md-2 ml-auto" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-success btn-sm btn-block",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.addPayment($event)
-                          }
-                        }
-                      },
-                      [_vm._v("Agregar Cobranza")]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.clearing.payments, function(payment, index) {
-                  return _c("div", { staticClass: "form-row" }, [
-                    _c("div", { staticClass: "form-group col-md-6" }, [
-                      _c("label", { attrs: { for: "payment_description" } }, [
-                        _vm._v("Descripción de la Cobranza")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: payment.description,
-                            expression: "payment.description"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "payment_description" },
-                        domProps: { value: payment.description },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              payment,
-                              "description",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group col-md-4" }, [
-                      _c("label", { attrs: { for: "payment_price" } }, [
-                        _vm._v("Precio")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: payment.price,
-                            expression: "payment.price"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", id: "payment_price" },
-                        domProps: { value: payment.price },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(payment, "price", $event.target.value)
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group col-md-2" }, [
-                      _c("br"),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-danger btn-sm",
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              _vm.removeCredit(index)
-                            }
-                          }
-                        },
-                        [_vm._v("x")]
-                      )
-                    ])
-                  ])
-                }),
-                _vm._v(" "),
                 _vm._m(1)
               ],
               2
@@ -72211,11 +72634,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Cantidad")]),
         _vm._v(" "),
-        _c("th", [_vm._v("vendido")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Restante")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Sub Total Vendido")])
+        _c("th", [_vm._v("Vendido")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Sub Total Restante")])
       ])
     ])
   },
@@ -72259,7 +72682,7 @@ if (false) {
 }
 
 /***/ }),
-/* 204 */
+/* 207 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

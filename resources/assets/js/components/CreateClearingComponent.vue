@@ -15,9 +15,9 @@
                                         <th>Producto</th>
                                         <th>Precio Unitario</th>
                                         <th>Cantidad</th>
-                                        <th>vendido</th>
                                         <th>Restante</th>
-                                        <th>Sub Total Vendido</th>
+                                        <th>Vendido</th>
+                                        <th>Sub Total Restante</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -33,13 +33,13 @@
                                             <input v-model="product.amount" id="amount" class="form-control" type="text" name="amount" disabled>
                                         </td>
                                         <td>
-                                            <input v-model="product.sold" id="sold" class="form-control" type="text" name="sold" autocomplete="off">
+                                            <input v-model="product.left" id="left" class="form-control" type="text" name="left" autocomplete="off">
                                         </td>
                                         <td>
-                                            {{ product.amount - product.sold | roundValue }}
+                                            {{ product.amount - product.left | roundValue }}
                                         </td>
                                         <td>
-                                            {{ product.price * product.sold | roundSubPrice }}
+                                            {{ product.price * product.left | roundSubPrice }}
                                         </td>
                                     </tr>
                                     </tbody>
@@ -47,17 +47,102 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-2 ml-auto">
-                                    <label>Total restante:</label>
+                                    <label>Total Vendido:</label>
                                     {{ clearing.income }}
                                 </div>
                                 <div class="col-md-2 ml-auto">
-                                    <label>Total vendido:</label>
-                                    {{ clearing.balance }}
+                                    <label>Total Restante:</label>
+                                    {{ clearing.left_in_products }}
                                 </div>
                                 <div class="col-md-4">
                                     <button @click.prevent="calculateTotal" class="btn btn-success">Calcular</button>
                                 </div>
                             </div>
+                            <hr>
+                            <div class="form-row">
+                                <h5>Listado de Créditos</h5>
+                                <div class="form-group col-md-2 ml-auto">
+                                    <button @click.prevent="addCredit" class="btn btn-success btn-sm btn-block">Agregar Crédito</button>
+                                </div>
+                            </div>
+                            <div class="form-row" v-for="(credit, index) in clearing.credits">
+                                <div class="form-group col-md-6">
+                                    <label for="credit_description">Descripción del Crédito</label>
+                                    <input v-model="credit.description" type="text" class="form-control" id="credit_description">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="credit_price">Precio</label>
+                                    <input v-model="credit.price" type="text" class="form-control" id="credit_price">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <br>
+                                    <button @click.prevent="removeCredit(index)" class="btn btn-danger btn-sm">x</button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-row">
+                                <h5>Listado de Cobranzas</h5>
+                                <div class="form-group col-md-2 ml-auto">
+                                    <button @click.prevent="addPayment" class="btn btn-success btn-sm btn-block">Agregar Cobranza</button>
+                                </div>
+                            </div>
+                            <div class="form-row" v-for="(payment, index) in clearing.payments">
+                                <div class="form-group col-md-6">
+                                    <label for="payment_description">Descripción de la Cobranza</label>
+                                    <input v-model="payment.description" type="text" class="form-control" id="payment_description">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="payment_price">Precio</label>
+                                    <input v-model="payment.price" type="text" class="form-control" id="payment_price">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <br>
+                                    <button @click.prevent="removeCredit(index)" class="btn btn-danger btn-sm">x</button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-row">
+                                <h5>Listado de Descuentos</h5>
+                                <div class="form-group col-md-2 ml-auto">
+                                    <button @click.prevent="addDiscount" class="btn btn-success btn-sm btn-block">Agregar Descuento</button>
+                                </div>
+                            </div>
+                            <div class="form-row" v-for="(discount, index) in clearing.discounts">
+                                <div class="form-group col-md-6">
+                                    <label for="discount_description">Descripción del Descuento</label>
+                                    <input v-model="discount.description" type="text" class="form-control" id="discount_description">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="discount_price">Precio</label>
+                                    <input v-model="discount.price" type="text" class="form-control" id="discount_price">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <br>
+                                    <button @click.prevent="removeDiscount(index)" class="btn btn-danger btn-sm">x</button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-row">
+                                <h5>Listado de Gastos</h5>
+                                <div class="form-group col-md-2 ml-auto">
+                                    <button @click.prevent="addExpense" class="btn btn-success btn-sm btn-block">Agregar Gasto</button>
+                                </div>
+                            </div>
+                            <div class="form-row" v-for="(expense, index) in clearing.expenses">
+                                <div class="form-group col-md-6">
+                                    <label for="expense_description">Descripción del Gasto</label>
+                                    <input v-model="expense.description" type="text" class="form-control" id="expense_description">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="expense_price">Precio</label>
+                                    <input v-model="expense.price" type="text" class="form-control" id="expense_price">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <br>
+                                    <button @click.prevent="removeExpense(index)" class="btn btn-danger btn-sm">x</button>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="form-row">
                                 <div class="form-group col-md-2">
                                     <label for="bill_100">100</label>
@@ -103,90 +188,6 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="form-row">
-                                <h5>Listado de Gastos</h5>
-                                <div class="form-group col-md-2 ml-auto">
-                                    <button @click.prevent="addExpense" class="btn btn-success btn-sm btn-block">Agregar Gasto</button>
-                                </div>
-                            </div>
-                            <div class="form-row" v-for="(expense, index) in clearing.expenses">
-                                <div class="form-group col-md-6">
-                                    <label for="expense_description">Descripción del Gasto</label>
-                                    <input v-model="expense.description" type="text" class="form-control" id="expense_description">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="expense_price">Precio</label>
-                                    <input v-model="expense.price" type="text" class="form-control" id="expense_price">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <br>
-                                    <button @click.prevent="removeExpense(index)" class="btn btn-danger btn-sm">x</button>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="form-row">
-                                <h5>Listado de Descuentos</h5>
-                                <div class="form-group col-md-2 ml-auto">
-                                    <button @click.prevent="addDiscount" class="btn btn-success btn-sm btn-block">Agregar Descuento</button>
-                                </div>
-                            </div>
-                            <div class="form-row" v-for="(discount, index) in clearing.discounts">
-                                <div class="form-group col-md-6">
-                                    <label for="discount_description">Descripción del Descuento</label>
-                                    <input v-model="discount.description" type="text" class="form-control" id="discount_description">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="discount_price">Precio</label>
-                                    <input v-model="discount.price" type="text" class="form-control" id="discount_price">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <br>
-                                    <button @click.prevent="removeDiscount(index)" class="btn btn-danger btn-sm">x</button>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="form-row">
-                                <h5>Listado de Créditos</h5>
-                                <div class="form-group col-md-2 ml-auto">
-                                    <button @click.prevent="addCredit" class="btn btn-success btn-sm btn-block">Agregar Crédito</button>
-                                </div>
-                            </div>
-                            <div class="form-row" v-for="(credit, index) in clearing.credits">
-                                <div class="form-group col-md-6">
-                                    <label for="credit_description">Descripción del Crédito</label>
-                                    <input v-model="credit.description" type="text" class="form-control" id="credit_description">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="credit_price">Precio</label>
-                                    <input v-model="credit.price" type="text" class="form-control" id="credit_price">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <br>
-                                    <button @click.prevent="removeCredit(index)" class="btn btn-danger btn-sm">x</button>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="form-row">
-                                <h5>Listado de Cobranzas</h5>
-                                <div class="form-group col-md-2 ml-auto">
-                                    <button @click.prevent="addPayment" class="btn btn-success btn-sm btn-block">Agregar Cobranza</button>
-                                </div>
-                            </div>
-                            <div class="form-row" v-for="(payment, index) in clearing.payments">
-                                <div class="form-group col-md-6">
-                                    <label for="payment_description">Descripción de la Cobranza</label>
-                                    <input v-model="payment.description" type="text" class="form-control" id="payment_description">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="payment_price">Precio</label>
-                                    <input v-model="payment.price" type="text" class="form-control" id="payment_price">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <br>
-                                    <button @click.prevent="removeCredit(index)" class="btn btn-danger btn-sm">x</button>
-                                </div>
-                            </div>
-
 
                             <div class="col-md-6 ml-auto">
                                 <button type="submit" class="btn btn-primary">
@@ -218,7 +219,7 @@
                     credits: [],
                     payments: [],
                     income: 0.0,
-                    balance: 0.0,
+                    left_in_products: 0.0,
                     expense: 0.0,
                     discount: 0.0,
                     credit: 0.0,
@@ -243,6 +244,7 @@
                 this.errors = []
             },
             storeClearing() {
+                this.calculateTotal();
                 axios.post('/api/store-clearings', this.clearing)
                     .then(res => {
                         if (res.status === 200) {
@@ -261,21 +263,21 @@
             },
             calculateTotal() {
                 this.clearing.income = 0.0;
-                this.clearing.balance = 0.0;
+                this.clearing.left_in_products = 0.0;
                 this.clearing.products.map(product => {
-                    if(product.sold !== undefined) {
-                        this.clearing.income = this.clearing.income + (product.price * (product.amount - product.sold));
+                    if(product.left !== undefined) {
+                        this.clearing.income = this.clearing.income + (product.price * (product.amount - product.left));
                     } else {
                         this.clearing.income = this.clearing.income + (product.price * product.amount);
                     }
-                    if(product.sold !== undefined) {
-                        this.clearing.balance = this.clearing.balance + (product.price * product.sold);
+                    if(product.left !== undefined) {
+                        this.clearing.left_in_products = this.clearing.left_in_products + (product.price * product.left);
                     }
                 });
                 let number1 = this.clearing.income.toString().split('.')[0].length;
-                let number2 = this.clearing.balance.toString().split('.')[0].length;
+                let number2 = this.clearing.left_in_products.toString().split('.')[0].length;
                 this.clearing.income = this.roundPrice(this.clearing.income, number1);
-                this.clearing.balance = this.roundPrice(this.clearing.balance, number2);
+                this.clearing.left_in_products = this.roundPrice(this.clearing.left_in_products, number2);
 
                 let n;
                 if (this.clearing.expenses.length > 0) {
@@ -302,6 +304,12 @@
                     n = this.clearing.payment.toString().split('.')[0].length;
                     this.clearing.payment = this.roundPrice(this.clearing.payment, n);
                 }
+                console.log('income', this.clearing.income);
+                console.log('left_in_products', this.clearing.left_in_products);
+                console.log('expense', this.clearing.expense);
+                console.log('discount', this.clearing.discount);
+                console.log('credit', this.clearing.credit);
+                console.log('payment', this.clearing.payment);
             },
             addExpense() {
                 this.clearing.expenses.push({description: '', price: ''})

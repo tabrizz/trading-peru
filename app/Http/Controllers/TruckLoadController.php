@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Book;
 use App\Product;
 use App\Seller;
 use App\SellerProductBag;
@@ -102,13 +103,35 @@ class TruckLoadController extends Controller
     public function storeTruckLoadProducts(Request $request) {
         //
         if ($this->isAvailable($request->products)) {
-            $truck_load = new TruckLoad;
-            $truck_load->seller_id = $request->seller['id'];
-            $truck_load->description = $request->description;
-            $truck_load->load_date = $request->load_date;
-            $truck_load->total_price = $request->total_price;
-            $truck_load->save();
-            $truck_load_id = $truck_load->id;
+            $book = DB::table('books')
+                ->selectRaw('books.id, books.status, books.previous_money')
+                ->whereRaw('books.seller_id = ? and status = ?', [$request->seller['id'], 0])
+                ->orderByDesc('created_at')->first();
+
+            if ($book == null) {
+                $book = new Book;
+                $book->seller_id = $request->seller['id'];
+                $book->previous_money = 0;
+                $book->save();
+                $book_id = $book->id;
+                $truck_load = new TruckLoad;
+                $truck_load->seller_id = $request->seller['id'];
+                $truck_load->description = $request->description;
+                $truck_load->load_date = $request->load_date;
+                $truck_load->total_price = $request->total_price;
+                $truck_load->book_id = $book_id;
+                $truck_load->save();
+                $truck_load_id = $truck_load->id;
+            } else {
+                $truck_load = new TruckLoad;
+                $truck_load->seller_id = $request->seller['id'];
+                $truck_load->description = $request->description;
+                $truck_load->load_date = $request->load_date;
+                $truck_load->total_price = $request->total_price;
+                $truck_load->book_id = $book->id;
+                $truck_load->save();
+                $truck_load_id = $truck_load->id;
+            }
 
             foreach ($request->products as $product) {
                 if (array_key_exists('amount', $product)) {
@@ -178,7 +201,6 @@ class TruckLoadController extends Controller
                     $stock = (int)$product_available[0]->stock;
 
                     if ($amount > $stock) {
-                        dd(true);
                         return false;
                     }
                 }

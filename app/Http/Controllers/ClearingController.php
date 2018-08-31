@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Book;
 use App\Clearing;
 use App\Seller;
+use App\TruckLoad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,9 +20,42 @@ class ClearingController extends Controller
     {
         //
         $seller = Seller::find($id);
-        $clearings = Clearing::paginate(20);
+        $book = DB::table('books')
+            ->selectRaw('books.id, books.status, books.previous_money')
+            ->whereRaw('books.seller_id = ? and books.status = ?', [$id, 0])
+            ->orderByDesc('created_at')->first();
+        $products_balance = 0;
+        $money_balance = 0;
+        if ($book == null) {
+            $truck_loads = collect([]);
+            $clearings = collect([]);
+            $book_id = -1;
+        } else {
+            $truck_loads = TruckLoad::where('seller_id', '=', $id)
+                ->where('status', '=', 0)
+                ->where('book_id', '=', $book->id)->get();
 
-        return view('clearings.index')->with(['seller' => $seller, 'clearings' => $clearings]);
+            $clearings = Clearing::where('seller_id', '=', $id)
+                ->where('book_id', '=', $book->id)->get();
+            $book_id = $book->id;
+            if ($clearings->isEmpty()) {
+                $products_balance = 0;
+                $money_balance = 0;
+            } else {
+                $products_balance = (float)$clearings[count($clearings) - 1]->left_in_products;
+                $money_balance = (float)($clearings[count($clearings) - 1]->previous_credits_balance + $clearings[count($clearings) - 1]->income) - (float)($clearings[count($clearings) - 1]->payment + $clearings[count($clearings) - 1]->discount +
+                    $clearings[count($clearings) - 1]->expense);
+            }
+        }
+
+        return view('clearings.index')->with([
+            'seller' => $seller,
+            'clearings' => $clearings,
+            'truck_loads' => $truck_loads,
+            'products_balance' => $products_balance,
+            'money_balance' => $money_balance,
+            'book_id' => $book_id
+        ]);
     }
 
     /**
@@ -62,7 +97,27 @@ class ClearingController extends Controller
     public function show($id)
     {
         //
-        return view('clearings.show');
+        $clearing = Clearing::find($id);
+        $seller = Seller::find($clearing->seller_id);
+        $expenses = DB::table('expenses')
+            ->selectRaw('description, price')
+            ->whereRaw('clearing_id = ?', [$id])->get();
+        $payments = DB::table('payments')
+            ->selectRaw('description, price')
+            ->whereRaw('clearing_id = ?', [$id])->get();
+        $discounts = DB::table('discounts')
+            ->selectRaw('description, price')
+            ->whereRaw('clearing_id = ?', [$id])->get();
+        $credits = DB::table('credits')
+            ->selectRaw('description, price')
+            ->whereRaw('clearing_id = ?', [$id])->get();
+
+        $money_delivered = DB::table('money_delivered')
+            ->selectRaw('bill_100, bill_50, bill_20, bill_10, coin_5, coin_2, coin_1, cent_50, cent_20, cent_10')
+            ->whereRaw('clearing_id = ?', [$id])->get();
+        //dd($clearing);
+
+        return view('clearings.show')->with(compact('clearing', 'expenses', 'payments', 'discounts', 'credits', 'money_delivered', 'seller'));
     }
 
     /**
@@ -86,6 +141,7 @@ class ClearingController extends Controller
     public function update(Request $request, $id)
     {
         //
+        dd($id);
     }
 
     /**
@@ -111,16 +167,98 @@ class ClearingController extends Controller
     }
 
     public function storeClearing(Request $request) {
-        $clearing = new Clearing;
-        $clearing->seller_id = $request->seller_id;
-        $clearing->income = $request->income;
-        $clearing->balance = $request->balance;
-        $clearing->expense = $request->expense;
-        $clearing->discount = $request->discount;
-        $clearing->credit = $request->credit;
-        $clearing->payment = $request->payment;
-        $clearing->save();
-        $clearing_id = $clearing->id;
+        $book = DB::table('books')
+            ->selectRaw('id, status, previous_money')
+            ->whereRaw('seller_id = ? and status = ?', [$request->seller_id, 1])
+            ->orderByDesc('created_at')->first();
+
+        $new_book = DB::table('books')
+            ->selectRaw('id, status, previous_money')
+            ->whereRaw('seller_id = ? and status = ?', [$request->seller_id, 0])
+            ->orderByDesc('created_at')->first();
+
+        if ($new_book == null) {
+            $book = new Book;
+            $book->seller_id = $request->seller_id;
+            $book->previous_money = 0;
+            $book->save();
+            $book_id = $book->id;
+
+            $clearing = new Clearing;
+            $clearing->seller_id = $request->seller_id;
+            $clearing->previous_products_balance = 0;
+            $clearing->previous_credits_balance = 0;
+            $clearing->income = $request->income;
+            $clearing->left_in_products = $request->left_in_products;
+            $clearing->credit = $request->credit;
+            $clearing->payment = $request->payment;
+            $clearing->discount = $request->discount;
+            $clearing->expense = $request->expense;
+            $clearing->book_id = $book_id;
+            $clearing->save();
+            $clearing_id = $clearing->id;
+
+        } else {
+            if ($book == null) {
+                $clearing = new Clearing;
+                $clearing->seller_id = $request->seller_id;
+                $clearing->previous_products_balance = 0;
+                $clearing->previous_credits_balance = 0;
+                $clearing->income = $request->income;
+                $clearing->left_in_products = $request->left_in_products;
+                $clearing->credit = $request->credit;
+                $clearing->payment = $request->payment;
+                $clearing->discount = $request->discount;
+                $clearing->expense = $request->expense;
+                $clearing->book_id = $new_book->id;
+                $clearing->save();
+                $clearing_id = $clearing->id;
+            } else {
+                if ($book->status == 1) {
+                    $clearing = new Clearing;
+                    $clearing->seller_id = $request->seller_id;
+                    $clearing->previous_products_balance = 0;
+                    $clearing->previous_credits_balance = $book->previous_money;
+                    $clearing->income = $request->income;
+                    $clearing->left_in_products = $request->left_in_products;
+                    $clearing->credit = $request->credit;
+                    $clearing->payment = $request->payment;
+                    $clearing->discount = $request->discount;
+                    $clearing->expense = $request->expense;
+                    $clearing->book_id = $new_book->id;
+                    $clearing->save();
+                    $clearing_id = $clearing->id;
+                } else {
+                    $previous_balance = DB::table('clearings')
+                        ->selectRaw('previous_credits_balance, income, payment, discount, expense, left_in_products')
+                        ->whereRaw('seller_id = ? and book_id = ?', [$request->seller_id, $book->id])
+                        ->orderByDesc('created_at')->first();
+
+                    if ($previous_balance == null) {
+                        $pb_p = 0;
+                        $pb_c = 0;
+                    } else {
+                        //dd($previous_balance);
+                        $pb_p = $previous_balance->left_in_products;
+                        $pb_c = ((float)$previous_balance->previous_credits_balance + (float)$previous_balance->income) - ((float)$previous_balance->payment + (float)$previous_balance->discount + (float)$previous_balance->expense);
+                    }
+
+                    $clearing = new Clearing;
+                    $clearing->seller_id = $request->seller_id;
+                    $clearing->previous_products_balance = $pb_p;
+                    $clearing->previous_credits_balance = $pb_c;
+                    $clearing->income = $request->income;
+                    $clearing->left_in_products = $request->left_in_products;
+                    $clearing->credit = $request->credit;
+                    $clearing->payment = $request->payment;
+                    $clearing->discount = $request->discount;
+                    $clearing->expense = $request->expense;
+                    $clearing->book_id = $book->id;
+                    $clearing->save();
+                    $clearing_id = $clearing->id;
+                }
+            }
+        }
 
         if(!empty($request->expenses)) {
             foreach ($request->expenses as $expense) {
@@ -176,19 +314,17 @@ class ClearingController extends Controller
         }
         foreach ($request->products as $product) {
 
-            if (array_key_exists('sold', $product)){
-                $seller_bag = DB::table('seller_product_bag')
-                    ->whereRaw('seller_product_bag.seller_id = ? and seller_product_bag.product_id = ?', [$request->seller_id, $product['product_id']])->get();
+            if (array_key_exists('left', $product)){
                 DB::table('seller_product_bag')
                     ->whereRaw('seller_product_bag.seller_id = ? and seller_product_bag.product_id = ?', [$request->seller_id, $product['product_id']])
                     ->update([
-                        'price' => ($product['price']),
-                        'amount' => ($seller_bag[0]->amount - $product['sold'])
+                        'price' => $product['price'],
+                        'amount' => $product['left']
                     ]);
             }
         }
 
-        DB::table('incomes')->insert(
+        DB::table('money_delivered')->insert(
             [
                 'bill_100' => $request->bill_100,
                 'bill_50' => $request->bill_50,
@@ -205,12 +341,5 @@ class ClearingController extends Controller
                 'updated_at' => \Carbon\Carbon::now(),
             ]
         );
-
-
-        $total = $request->income + $request->expense + $request->discount + $request->credit - $request->payment - $request->balance;
-
-        $seller = Seller::find($request->seller_id);
-        $seller->money = $seller->money - $total;
-        $seller->save();
     }
 }
