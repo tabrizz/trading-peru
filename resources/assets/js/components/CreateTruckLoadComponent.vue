@@ -176,6 +176,7 @@
             },
             calculateTotal() {
                 this.truck_load.total_price = 0.0;
+                console.log('produts', this.products);
                 this.products.map(product => {
                     if(product.amount !== undefined) {
                         this.truck_load.total_price = this.truck_load.total_price + (product.price * product.amount);

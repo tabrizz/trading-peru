@@ -67934,6 +67934,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             this.truck_load.total_price = 0.0;
+            console.log('produts', this.products);
             this.products.map(function (product) {
                 if (product.amount !== undefined) {
                     _this3.truck_load.total_price = _this3.truck_load.total_price + product.price * product.amount;
