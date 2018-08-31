@@ -175,6 +175,7 @@
                 this.products.splice(index,1)
             },
             calculateTotal() {
+                console.log('produts', this.products);
                 this.truck_load.total_price = 0.0;
                 console.log('produts', this.products);
                 this.products.map(product => {

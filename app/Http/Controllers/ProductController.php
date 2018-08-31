@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\PurchaseOrder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -110,8 +111,9 @@ class ProductController extends Controller
     }
 
     public function getProducts() {
-        $products = Product::all()->sortBy('id');
-
+        //$products = Product::all()->sortBy('id')->get();
+        $products = DB::table('products')
+            ->orderBy('id', 'asc')->get();
         return $products;
     }
 
