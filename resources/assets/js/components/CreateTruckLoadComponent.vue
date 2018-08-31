@@ -154,7 +154,6 @@
                 axios.post('/api/truck-loads', this.truck_load)
                     .then(res => {
                         if (res.data.store === 'success') {
-                            console.log(res.data);
                             swal('Muy bien!', `Carga registrada`, 'success');
                             setTimeout(() => {
                                 window.location.href = '/truck-loads';
@@ -175,9 +174,7 @@
                 this.products.splice(index,1)
             },
             calculateTotal() {
-                console.log('produts', this.products);
                 this.truck_load.total_price = 0.0;
-                console.log('produts', this.products);
                 this.products.map(product => {
                     if(product.amount !== undefined) {
                         this.truck_load.total_price = this.truck_load.total_price + (product.price * product.amount);

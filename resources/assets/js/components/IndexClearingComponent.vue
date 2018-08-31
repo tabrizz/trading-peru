@@ -119,7 +119,10 @@
                         seller: this.seller_item
                     })
                     .then((res) => {
-
+                        swal('Muy bien!', `Baja registrada`, 'success');
+                        setTimeout(() => {
+                            window.location.href = '/sellers';
+                        }, 2000);
                     })
                     .catch((err) => {
                         console.log('error:', err);
